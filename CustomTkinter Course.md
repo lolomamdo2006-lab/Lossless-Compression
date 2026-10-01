@@ -1,5 +1,10 @@
+# CustomTkinter Course
 
-# Part 1 — Basics
+A practical guide to building modern desktop GUI applications with Python using CustomTkinter.
+
+---
+
+# Part 1 — Getting Started
 
 ## 1. Installation
 
@@ -9,16 +14,22 @@ Install CustomTkinter:
 pip install customtkinter
 ```
 
+Check that it is installed:
+
+```bash
+pip show customtkinter
+```
+
 ---
 
-## 2. First Window
+# 2. Your First Window
 
 ```python
 import customtkinter as ctk
 
 app = ctk.CTk()
 
-app.title("Data Compression")
+app.title("My Application")
 app.geometry("600x400")
 
 app.mainloop()
@@ -30,21 +41,9 @@ app.mainloop()
 import customtkinter as ctk
 ```
 
-Imports the `customtkinter` library and gives it the alias `ctk`.
+Imports the library and gives it the alias `ctk`.
 
-Instead of:
-
-```python
-customtkinter.CTk()
-```
-
-we can write:
-
-```python
-ctk.CTk()
-```
-
-### Creating the Window
+### `CTk()`
 
 ```python
 app = ctk.CTk()
@@ -52,17 +51,15 @@ app = ctk.CTk()
 
 Creates the main application window.
 
-`app` is an object representing the window.
-
-### Window Title
+### `title()`
 
 ```python
-app.title("Data Compression")
+app.title("My Application")
 ```
 
 Sets the window title.
 
-### Window Size
+### `geometry()`
 
 ```python
 app.geometry("600x400")
@@ -81,38 +78,36 @@ height = 400
 app.mainloop()
 ```
 
-Keeps the application running and allows it to receive user events.
+Starts the GUI event loop.
 
-```text
-User clicks button
-       ↓
-User types
-       ↓
-User selects something
-       ↓
-User closes window
-```
+The application stays running and waits for user events such as clicks, typing, and window actions.
 
 ---
 
-## 3. GUI Structure
+# 3. GUI Structure
 
-A GUI usually contains a main window and widgets inside it:
+A typical GUI has a hierarchy:
 
 ```text
-Window
-  │
-  ├── Label
-  ├── Button
-  ├── Entry
-  └── Textbox
+Application Window
+│
+├── Frame
+│   ├── Label
+│   ├── Entry
+│   └── Button
+│
+└── Frame
+    ├── Textbox
+    └── Button
 ```
 
-The window and frames are **containers**.
+The main window and frames are **containers**.
 
 Labels, buttons, entries, and textboxes are **widgets**.
 
 ---
+
+# Part 2 — Basic Widgets
 
 # 4. CTkLabel
 
@@ -127,16 +122,17 @@ label = ctk.CTkLabel(
 label.pack()
 ```
 
-### `CTkLabel`
+### Important Parameters
 
 ```python
-ctk.CTkLabel(parent, text="...")
+ctk.CTkLabel(
+    parent,
+    text="..."
+)
 ```
 
-- `parent` → the window or frame containing the label.
-    
-- `text` → the displayed text.
-    
+* `parent` → the window or frame containing the widget.
+* `text` → the displayed text.
 
 ---
 
@@ -171,639 +167,39 @@ button = ctk.CTkButton(
 button.pack()
 ```
 
-### `command`
+When the user clicks the button:
+
+```text
+Button Click
+      ↓
+say_hello()
+      ↓
+print("Hello!")
+```
+
+### Important
+
+Use:
 
 ```python
 command=say_hello
 ```
 
-Tells the button which function to execute when clicked.
-
-Do not write:
+Not:
 
 ```python
 command=say_hello()
 ```
 
-because this executes the function immediately.
+The first passes the function to be called later.
 
-### Callback
-
-A function passed to `command` is called a **callback**.
-
-```text
-User clicks button
-        ↓
-command
-        ↓
-callback function
-        ↓
-function executes
-```
+The second calls the function immediately while creating the button.
 
 ---
 
-# Part 2 — Input and Output
+# 6. Callbacks
 
-# 6. CTkEntry
-
-`CTkEntry` is used for single-line user input.
-
-```python
-entry = ctk.CTkEntry(
-    app,
-    placeholder_text="Enter text..."
-)
-
-entry.pack()
-```
-
-### Reading the Input
-
-```python
-text = entry.get()
-```
-
-If the user enters:
-
-```text
-ABABABAB
-```
-
-then:
-
-```python
-text = entry.get()
-```
-
-returns:
-
-```python
-"ABABABAB"
-```
-
-### `placeholder_text`
-
-```python
-placeholder_text="Enter text..."
-```
-
-Displays placeholder text before the user enters anything.
-
-It is not the actual input value.
-
----
-
-# 7. CTkTextbox
-
-`CTkTextbox` is used for multi-line or large text input.
-
-```python
-textbox = ctk.CTkTextbox(app)
-
-textbox.pack()
-```
-
-### Reading the Text
-
-```python
-text = textbox.get("1.0", "end")
-```
-
-`"1.0"` means:
-
-```text
-Line 1, character 0
-```
-
-`"end"` means:
-
-```text
-Until the end of the textbox
-```
-
-### Entry vs Textbox
-
-|Feature|Entry|Textbox|
-|---|---|---|
-|Single line|Yes|Yes|
-|Multiple lines|No|Yes|
-|Large input|No|Yes|
-|Password input|Yes|No|
-
-For a Data Compression application, `CTkTextbox` is useful for large text input.
-
----
-
-# 8. Displaying Function Results
-
-A function can return a result:
-
-```python
-def calculate():
-    return "Done!"
-```
-
-The result can be displayed in a Label:
-
-```python
-def run():
-    result = calculate()
-    result_label.configure(text=result)
-```
-
-General flow:
-
-```text
-Button clicked
-      ↓
-Function runs
-      ↓
-Function returns result
-      ↓
-Result stored in variable
-      ↓
-Label updated
-```
-
----
-
-# 9. Connecting GUI to LZ77
-
-Suppose `lz77.py` contains:
-
-```python
-def compress(text):
-    result = "Compressed: " + text
-    return result
-```
-
-In `main.py`:
-
-```python
-import customtkinter as ctk
-from lz77 import compress as lz77_compress
-
-
-def run_compression():
-    text = entry.get()
-
-    result = lz77_compress(text)
-
-    result_label.configure(text=result)
-```
-
-The GUI does not need to know how the compression algorithm works.
-
-```text
-User Input
-    ↓
-entry.get()
-    ↓
-lz77_compress(text)
-    ↓
-return result
-    ↓
-result_label.configure()
-```
-
----
-
-# Part 3 — Layout
-
-# 10. Frames
-
-A Frame is a container used to organize widgets.
-
-```python
-frame = ctk.CTkFrame(app)
-
-frame.pack()
-```
-
-Widgets can be placed inside it:
-
-```python
-label = ctk.CTkLabel(
-    frame,
-    text="Hello"
-)
-
-label.pack()
-```
-
-Structure:
-
-```text
-app
-│
-├── frame
-│   ├── label
-│   ├── button
-│   └── entry
-│
-└── other widgets
-```
-
----
-
-# 11. `pack()`
-
-`pack()` is a layout manager used to place widgets.
-
-```python
-label.pack()
-```
-
-### Padding
-
-```python
-label.pack(
-    padx=20,
-    pady=10
-)
-```
-
-- `padx` → horizontal space.
-    
-- `pady` → vertical space.
-    
-
-### `side`
-
-```python
-button.pack(side="left")
-```
-
-Places the widget toward the left side.
-
-```python
-button.pack(side="right")
-```
-
-Places the widget toward the right side.
-
----
-
-# 12. `grid()`
-
-`grid()` arranges widgets using rows and columns.
-
-```text
-        column 0     column 1
-       ┌───────────┬───────────┐
-row 0  │   Label   │   Entry   │
-       ├───────────┼───────────┤
-row 1  │  Button   │  Button   │
-       └───────────┴───────────┘
-```
-
-Example:
-
-```python
-label = ctk.CTkLabel(
-    app,
-    text="Input:"
-)
-
-label.grid(
-    row=0,
-    column=0
-)
-
-entry = ctk.CTkEntry(app)
-
-entry.grid(
-    row=0,
-    column=1
-)
-```
-
-Buttons:
-
-```python
-button77.grid(
-    row=1,
-    column=0
-)
-
-button78.grid(
-    row=1,
-    column=1
-)
-```
-
-### Important Rule
-
-Do not mix `pack()` and `grid()` in the same parent.
-
-Incorrect:
-
-```python
-label.pack()
-button.grid(...)
-```
-
-if both widgets belong directly to `app`.
-
-Correct:
-
-```text
-app
-│
-└── frame
-    ├── label  → grid()
-    ├── button → grid()
-    └── entry  → grid()
-```
-
-`pack()` can be used with `app` while `grid()` is used inside `frame`.
-
----
-
-# 13. `place()`
-
-`place()` allows widgets to be positioned using coordinates.
-
-```python
-button = ctk.CTkButton(
-    app,
-    text="Click"
-)
-
-button.place(
-    x=100,
-    y=50
-)
-```
-
-The widget is positioned at a specific location.
-
-`place()` is useful for precise positioning, but `grid()` or `pack()` is usually easier for responsive layouts.
-
----
-
-# 14. `grid()` Advanced
-
-A widget can span multiple columns:
-
-```python
-result_label.grid(
-    row=3,
-    column=0,
-    columnspan=2
-)
-```
-
-`columnspan=2` means the widget occupies two columns.
-
-### Expandable Columns
-
-```python
-frame.grid_columnconfigure(
-    0,
-    weight=1
-)
-
-frame.grid_columnconfigure(
-    1,
-    weight=1
-)
-```
-
-This allows columns to expand when the window is resized.
-
----
-
-# 15. `fill` and `expand`
-
-With `pack()`:
-
-```python
-button.pack(
-    fill="x"
-)
-```
-
-Expands the button horizontally.
-
-For both directions:
-
-```python
-textbox.pack(
-    fill="both",
-    expand=True
-)
-```
-
-### Values
-
-```text
-fill="x"     → horizontal
-fill="y"     → vertical
-fill="both"  → both directions
-```
-
-`expand=True` allows the widget to use additional available space.
-
----
-
-# 16. Widgets vs Containers
-
-### Widgets
-
-Widgets are UI elements that display information or interact with the user.
-
-Examples:
-
-```text
-CTkLabel
-CTkButton
-CTkEntry
-CTkTextbox
-CTkComboBox
-CTkCheckBox
-CTkSwitch
-```
-
-### Containers
-
-Containers hold other widgets.
-
-Examples:
-
-```text
-CTk
-CTkFrame
-CTkScrollableFrame
-```
-
-Example:
-
-```text
-Window
-│
-└── Frame
-    │
-    ├── Label
-    ├── Entry
-    └── Button
-```
-
----
-
-# Part 4 — User Interaction
-
-# 17. CTkComboBox
-
-A ComboBox lets the user select one item from a list.
-
-```python
-algorithm = ctk.CTkComboBox(
-    app,
-    values=["LZ77", "LZ78", "LZW"]
-)
-
-algorithm.pack()
-```
-
-### Getting the Selected Value
-
-```python
-selected = algorithm.get()
-```
-
-If the user selects `LZ78`:
-
-```python
-selected
-```
-
-returns:
-
-```text
-LZ78
-```
-
----
-
-# 18. CTkCheckBox
-
-A CheckBox represents an on/off option.
-
-```python
-checkbox = ctk.CTkCheckBox(
-    app,
-    text="Show compression ratio"
-)
-
-checkbox.pack()
-```
-
-Get its value:
-
-```python
-value = checkbox.get()
-```
-
-Returns:
-
-```text
-1
-```
-
-when selected, or:
-
-```text
-0
-```
-
-when not selected.
-
----
-
-# 19. CTkSwitch
-
-A Switch is another on/off control.
-
-```python
-switch = ctk.CTkSwitch(
-    app,
-    text="Dark Mode"
-)
-
-switch.pack()
-```
-
----
-
-# 20. `configure()`
-
-`configure()` changes widget properties after creation.
-
-Change the text:
-
-```python
-result_label.configure(
-    text="Compression Done"
-)
-```
-
-Change the font:
-
-```python
-result_label.configure(
-    font=("Arial", 20)
-)
-```
-
----
-
-# 21. StringVar
-
-`StringVar` stores a string value connected to a widget.
-
-```python
-text_var = ctk.StringVar(
-    value="Result"
-)
-```
-
-Use it with a Label:
-
-```python
-label = ctk.CTkLabel(
-    app,
-    textvariable=text_var
-)
-```
-
-Change the value:
-
-```python
-text_var.set(
-    "Compression completed!"
-)
-```
-
-The Label updates automatically.
-
----
-
-# 22. Events and Callbacks
-
-GUI applications are **event-driven**.
-
-Examples of events:
-
-```text
-Button clicked
-Mouse moved
-Key pressed
-Window closed
-```
-
-A callback is a function that runs when an event occurs.
+A **callback** is a function passed to another function or widget to be executed later when an event occurs.
 
 Example:
 
@@ -822,163 +218,593 @@ button = ctk.CTkButton(
 Flow:
 
 ```text
-Event
-  ↓
+User Event
+    ↓
 Callback
-  ↓
+    ↓
 Function
-  ↓
+    ↓
 Action
 ```
 
 ---
 
-# Part 5 — Application Appearance
+# 7. CTkEntry
 
-# 23. Colors
+`CTkEntry` is used for single-line input.
 
 ```python
-button = ctk.CTkButton(
+entry = ctk.CTkEntry(
     app,
-    text="Compress",
-    fg_color="green",
-    hover_color="darkgreen"
+    placeholder_text="Enter your name..."
 )
+
+entry.pack()
 ```
 
-- `fg_color` → normal button color.
-    
-- `hover_color` → color when the mouse is over the button.
-    
+### Reading the Input
+
+```python
+name = entry.get()
+```
+
+If the user enters:
+
+```text
+Alaa
+```
+
+then:
+
+```python
+name = entry.get()
+```
+
+returns:
+
+```python
+"Alaa"
+```
+
+### Placeholder Text
+
+```python
+placeholder_text="Enter your name..."
+```
+
+Displays temporary text before the user enters a value.
+
+The placeholder is not the actual input.
 
 ---
 
-# 24. Fonts
+# 8. CTkTextbox
+
+`CTkTextbox` is used for multi-line text.
+
+```python
+textbox = ctk.CTkTextbox(app)
+
+textbox.pack()
+```
+
+### Reading Text
+
+```python
+text = textbox.get("1.0", "end")
+```
+
+`"1.0"` means:
+
+```text
+Line 1, character 0
+```
+
+`"end"` means:
+
+```text
+The end of the textbox
+```
+
+### Inserting Text
+
+```python
+textbox.insert(
+    "1.0",
+    "Hello!"
+)
+```
+
+### Deleting Text
+
+```python
+textbox.delete(
+    "1.0",
+    "end"
+)
+```
+
+---
+
+# 9. Entry vs Textbox
+
+| Feature        | CTkEntry  | CTkTextbox |
+| -------------- | --------- | ---------- |
+| Single line    | Yes       | Yes        |
+| Multiple lines | No        | Yes        |
+| Large text     | Not ideal | Yes        |
+| Simple input   | Yes       | Yes        |
+
+Use `CTkEntry` for things such as:
+
+```text
+Name
+Email
+Username
+Search
+Number
+```
+
+Use `CTkTextbox` for:
+
+```text
+Notes
+Descriptions
+Documents
+Large text
+Logs
+```
+
+---
+
+# 10. Updating a Widget
+
+Widgets can be changed after creation using `configure()`.
+
+```python
+label.configure(
+    text="New Text"
+)
+```
+
+You can also change other properties:
+
+```python
+label.configure(
+    font=("Arial", 20)
+)
+```
+
+Example:
+
+```python
+def change_text():
+    label.configure(
+        text="Text Changed!"
+    )
+```
+
+---
+
+# Part 3 — Layout Managers
+
+# 11. `pack()`
+
+`pack()` places widgets automatically.
+
+```python
+label.pack()
+button.pack()
+entry.pack()
+```
+
+Widgets are arranged according to the available space.
+
+---
+
+## Padding
+
+```python
+label.pack(
+    padx=20,
+    pady=10
+)
+```
+
+* `padx` → horizontal padding.
+* `pady` → vertical padding.
+
+Example:
+
+```python
+button.pack(
+    padx=20,
+    pady=20
+)
+```
+
+---
+
+## `side`
+
+```python
+button.pack(side="left")
+```
+
+or:
+
+```python
+button.pack(side="right")
+```
+
+Possible values include:
+
+```text
+left
+right
+top
+bottom
+```
+
+---
+
+## `fill`
+
+```python
+button.pack(
+    fill="x"
+)
+```
+
+Makes the widget expand horizontally.
+
+```python
+textbox.pack(
+    fill="both"
+)
+```
+
+Allows expansion in both directions.
+
+---
+
+## `expand`
+
+```python
+textbox.pack(
+    fill="both",
+    expand=True
+)
+```
+
+Allows the widget to use additional available space.
+
+---
+
+# 12. `grid()`
+
+`grid()` arranges widgets using rows and columns.
+
+```text
+        Column 0       Column 1
+       ┌───────────┬───────────┐
+Row 0  │   Label   │   Entry   │
+       ├───────────┼───────────┤
+Row 1  │  Button   │  Button   │
+       └───────────┴───────────┘
+```
+
+Example:
 
 ```python
 label = ctk.CTkLabel(
     app,
-    text="Lossless Compression",
-    font=("Arial", 24, "bold")
+    text="Name:"
+)
+
+label.grid(
+    row=0,
+    column=0
+)
+
+entry = ctk.CTkEntry(app)
+
+entry.grid(
+    row=0,
+    column=1
 )
 ```
 
-Format:
+Another example:
+
+```python
+button1.grid(
+    row=1,
+    column=0
+)
+
+button2.grid(
+    row=1,
+    column=1
+)
+```
+
+---
+
+# 13. `columnspan`
+
+A widget can occupy multiple columns.
+
+```python
+label.grid(
+    row=0,
+    column=0,
+    columnspan=2
+)
+```
 
 ```text
-(font name, size, style)
-```
-
-Examples:
-
-```python
-font=("Arial", 18)
-```
-
-```python
-font=("Arial", 18, "bold")
+       Column 0       Column 1
+       ┌───────────────────────┐
+Row 0  │         Label         │
+       └───────────────────────┘
 ```
 
 ---
 
-# 25. Dark / Light Mode
+# 14. `grid_columnconfigure()`
 
-### Dark
-
-```python
-ctk.set_appearance_mode("dark")
-```
-
-### Light
+Controls how columns expand when the window is resized.
 
 ```python
-ctk.set_appearance_mode("light")
+app.grid_columnconfigure(
+    0,
+    weight=1
+)
+
+app.grid_columnconfigure(
+    1,
+    weight=1
+)
 ```
 
-### System
-
-```python
-ctk.set_appearance_mode("system")
-```
-
-`system` follows the operating system's appearance setting.
+A larger `weight` gives a column more of the available space.
 
 ---
 
-# 26. Themes
+# 15. `place()`
 
-Set a default color theme:
+`place()` positions widgets using coordinates.
 
 ```python
-ctk.set_default_color_theme("blue")
+button = ctk.CTkButton(
+    app,
+    text="Click"
+)
+
+button.place(
+    x=100,
+    y=50
+)
 ```
 
-Themes help maintain consistent colors throughout the application.
+The coordinates represent the widget position inside its parent.
+
+`place()` is useful for precise positioning, but `pack()` and `grid()` are usually better for flexible layouts.
 
 ---
 
-# 27. Professional Layout
+# 16. Important Layout Rule
 
-A clean GUI can be divided into sections using Frames.
+Do not mix `pack()` and `grid()` inside the same parent.
 
-Example:
+Incorrect:
+
+```python
+label.pack()
+button.grid(row=0, column=0)
+```
+
+if both widgets belong directly to `app`.
+
+You can, however, use different layout managers in different containers:
 
 ```text
-Main Window
+app
+│
+├── Frame       → pack()
+│   ├── Label   → grid()
+│   └── Entry   → grid()
+│
+└── Button      → pack()
+```
+
+---
+
+# Part 4 — Containers
+
+# 17. CTkFrame
+
+A Frame is a container for organizing widgets.
+
+```python
+frame = ctk.CTkFrame(app)
+
+frame.pack()
+```
+
+Add widgets to the Frame:
+
+```python
+label = ctk.CTkLabel(
+    frame,
+    text="Hello"
+)
+
+label.pack()
+```
+
+The important part is:
+
+```python
+frame
+```
+
+instead of:
+
+```python
+app
+```
+
+The Label belongs to the Frame.
+
+---
+
+# 18. Nested Frames
+
+Frames can contain other Frames.
+
+```text
+Application
 │
 ├── Header Frame
 │   └── Title
 │
 ├── Input Frame
-│   ├── Algorithm
-│   └── Textbox
+│   ├── Label
+│   └── Entry
 │
-├── Control Frame
-│   ├── Compress
-│   └── Decompress
-│
-└── Result Frame
-    ├── Result
-    └── Compression Ratio
+└── Control Frame
+    ├── Button
+    └── Button
 ```
 
-This makes the application easier to organize and maintain.
+Example:
+
+```python
+header = ctk.CTkFrame(app)
+header.pack()
+
+input_frame = ctk.CTkFrame(app)
+input_frame.pack()
+
+control_frame = ctk.CTkFrame(app)
+control_frame.pack()
+```
+
+This is one of the main ways to build organized interfaces.
 
 ---
 
-# 28. CTkProgressBar
+# 19. Widgets vs Containers
 
-A ProgressBar displays progress.
+### Widgets
 
-```python
-progress = ctk.CTkProgressBar(app)
-
-progress.pack()
-```
-
-Set its value:
-
-```python
-progress.set(0.5)
-```
-
-Range:
-
-```text
-0 → 1
-```
+UI components that display information or interact with the user.
 
 Examples:
 
 ```text
-0.0 = 0%
-0.5 = 50%
-1.0 = 100%
+CTkLabel
+CTkButton
+CTkEntry
+CTkTextbox
+CTkComboBox
+CTkCheckBox
+CTkSwitch
+```
+
+### Containers
+
+Components used to hold other widgets.
+
+Examples:
+
+```text
+CTk
+CTkFrame
+CTkScrollableFrame
 ```
 
 ---
 
-# 29. CTkSlider
+# Part 5 — Selection and Controls
+
+# 20. CTkComboBox
+
+A ComboBox allows the user to select one option.
+
+```python
+options = ctk.CTkComboBox(
+    app,
+    values=[
+        "Option 1",
+        "Option 2",
+        "Option 3"
+    ]
+)
+
+options.pack()
+```
+
+### Get Selected Value
+
+```python
+selected = options.get()
+```
+
+---
+
+# 21. CTkCheckBox
+
+A CheckBox represents an on/off option.
+
+```python
+checkbox = ctk.CTkCheckBox(
+    app,
+    text="Enable option"
+)
+
+checkbox.pack()
+```
+
+Get its value:
+
+```python
+value = checkbox.get()
+```
+
+Returns:
+
+```text
+1 → selected
+0 → not selected
+```
+
+---
+
+# 22. CTkSwitch
+
+A Switch is another on/off control.
+
+```python
+switch = ctk.CTkSwitch(
+    app,
+    text="Enable feature"
+)
+
+switch.pack()
+```
+
+Get its value:
+
+```python
+value = switch.get()
+```
+
+---
+
+# 23. CTkSlider
 
 A Slider allows the user to select a numeric value.
 
@@ -1000,9 +826,35 @@ value = slider.get()
 
 ---
 
-# 30. CTkScrollableFrame
+# 24. CTkProgressBar
 
-Useful when the content is larger than the available window.
+A ProgressBar displays progress.
+
+```python
+progress = ctk.CTkProgressBar(app)
+
+progress.pack()
+```
+
+Set the progress:
+
+```python
+progress.set(0.5)
+```
+
+Range:
+
+```text
+0.0 → 0%
+0.5 → 50%
+1.0 → 100%
+```
+
+---
+
+# 25. CTkScrollableFrame
+
+Useful when a Frame contains more content than can fit in the window.
 
 ```python
 frame = ctk.CTkScrollableFrame(app)
@@ -1013,13 +865,186 @@ frame.pack(
 )
 ```
 
-The user can scroll through the content.
+The user can scroll through its contents.
 
 ---
 
-# Part 6 — Data Compression Project
+# Part 6 — Variables and Dynamic Data
 
-# 31. Message Boxes
+# 26. StringVar
+
+`StringVar` stores a string value that can be connected to widgets.
+
+```python
+text_var = ctk.StringVar(
+    value="Initial Text"
+)
+```
+
+Use it with a Label:
+
+```python
+label = ctk.CTkLabel(
+    app,
+    textvariable=text_var
+)
+
+label.pack()
+```
+
+Change the value:
+
+```python
+text_var.set(
+    "Updated Text"
+)
+```
+
+The Label updates automatically.
+
+Get the value:
+
+```python
+value = text_var.get()
+```
+
+---
+
+# 27. Dynamic Output
+
+Instead of creating a new Label every time, update an existing widget.
+
+```python
+result_label = ctk.CTkLabel(
+    app,
+    text="Result"
+)
+
+result_label.pack()
+
+
+def process():
+    result = "Operation completed"
+    
+    result_label.configure(
+        text=result
+    )
+```
+
+General pattern:
+
+```text
+Input
+ ↓
+Function
+ ↓
+Result
+ ↓
+configure()
+ ↓
+Updated GUI
+```
+
+---
+
+# Part 7 — Appearance
+
+# 28. Colors
+
+Example:
+
+```python
+button = ctk.CTkButton(
+    app,
+    text="Submit",
+    fg_color="green",
+    hover_color="darkgreen"
+)
+
+button.pack()
+```
+
+Common properties:
+
+```text
+fg_color
+hover_color
+text_color
+border_color
+border_width
+```
+
+---
+
+# 29. Fonts
+
+```python
+label = ctk.CTkLabel(
+    app,
+    text="Application",
+    font=("Arial", 24, "bold")
+)
+
+label.pack()
+```
+
+Format:
+
+```text
+(font name, size, style)
+```
+
+Examples:
+
+```python
+font=("Arial", 18)
+```
+
+```python
+font=("Arial", 18, "bold")
+```
+
+---
+
+# 30. Appearance Mode
+
+### Dark Mode
+
+```python
+ctk.set_appearance_mode("dark")
+```
+
+### Light Mode
+
+```python
+ctk.set_appearance_mode("light")
+```
+
+### System Mode
+
+```python
+ctk.set_appearance_mode("system")
+```
+
+`system` follows the operating system's appearance setting.
+
+---
+
+# 31. Themes
+
+Set a default color theme:
+
+```python
+ctk.set_default_color_theme("blue")
+```
+
+Themes provide consistent colors across widgets.
+
+---
+
+# Part 8 — User Input and Errors
+
+# 32. Message Boxes
 
 Import:
 
@@ -1032,7 +1057,7 @@ from tkinter import messagebox
 ```python
 messagebox.showinfo(
     "Success",
-    "Compression completed!"
+    "Operation completed!"
 )
 ```
 
@@ -1041,18 +1066,29 @@ messagebox.showinfo(
 ```python
 messagebox.showerror(
     "Error",
-    "Please enter some text."
+    "Something went wrong."
+)
+```
+
+### Warning
+
+```python
+messagebox.showwarning(
+    "Warning",
+    "Please check your input."
 )
 ```
 
 ---
 
-# 32. Input Validation
+# 33. Input Validation
 
-Check whether the user entered text before running compression.
+Always validate user input before processing it.
+
+Example:
 
 ```python
-def run_compression():
+def process():
 
     text = textbox.get(
         "1.0",
@@ -1063,12 +1099,12 @@ def run_compression():
 
         messagebox.showerror(
             "Error",
-            "Please enter text."
+            "Please enter some text."
         )
 
         return
 
-    result = lz77_compress(text)
+    result = process_data(text)
 
     result_label.configure(
         text=result
@@ -1081,11 +1117,25 @@ def run_compression():
 text.strip()
 ```
 
-Removes whitespace from the beginning and end of the string.
+Removes whitespace from the beginning and end of a string.
+
+For example:
+
+```python
+"   Hello   ".strip()
+```
+
+returns:
+
+```python
+"Hello"
+```
 
 ---
 
-# 33. File Dialog — Open File
+# Part 9 — Files
+
+# 34. File Dialog
 
 Import:
 
@@ -1109,353 +1159,284 @@ C:/Users/User/Desktop/file.txt
 
 ---
 
-# 34. File Dialog — Save File
+# 35. Selecting File Types
 
-Allow the user to choose where to save the result:
+You can restrict the displayed file types:
+
+```python
+file_path = filedialog.askopenfilename(
+    filetypes=[
+        ("Text Files", "*.txt"),
+        ("All Files", "*.*")
+    ]
+)
+```
+
+---
+
+# 36. Save File Dialog
 
 ```python
 file_path = filedialog.asksaveasfilename()
 ```
 
+You can specify a default extension:
+
+```python
+file_path = filedialog.asksaveasfilename(
+    defaultextension=".txt",
+    filetypes=[
+        ("Text Files", "*.txt"),
+        ("All Files", "*.*")
+    ]
+)
+```
+
+---
+
+# 37. Reading a Selected File
+
+```python
+def open_file():
+
+    file_path = filedialog.askopenfilename()
+
+    if not file_path:
+        return
+
+    with open(
+        file_path,
+        "r",
+        encoding="utf-8"
+    ) as file:
+
+        content = file.read()
+
+    textbox.delete(
+        "1.0",
+        "end"
+    )
+
+    textbox.insert(
+        "1.0",
+        content
+    )
+```
+
+If the user cancels the dialog:
+
+```python
+if not file_path:
+    return
+```
+
+prevents the program from trying to open an empty path.
+
+---
+
+# 38. Saving Data
+
+```python
+def save_file():
+
+    file_path = filedialog.asksaveasfilename(
+        defaultextension=".txt"
+    )
+
+    if not file_path:
+        return
+
+    text = textbox.get(
+        "1.0",
+        "end"
+    )
+
+    with open(
+        file_path,
+        "w",
+        encoding="utf-8"
+    ) as file:
+
+        file.write(text)
+```
+
 General flow:
 
 ```text
-Input File
+Select File
     ↓
 Read File
     ↓
-Compression
+Process Data
     ↓
-Compressed Data
+Display Result
     ↓
-Save File
+Save Result
 ```
 
 ---
 
-# 35. Compress Button
+# Part 10 — Connecting GUI to Python Logic
 
-The Compress button should:
+# 39. Separate GUI from Logic
 
-1. Get the input.
-    
-2. Validate the input.
-    
-3. Determine the selected algorithm.
-    
-4. Call the algorithm.
-    
-5. Display the result.
-    
+A good project structure separates the interface from the application logic.
 
 Example:
 
-```python
-def run_compression():
-
-    text = textbox.get(
-        "1.0",
-        "end"
-    )
-
-    if not text.strip():
-        messagebox.showerror(
-            "Error",
-            "Please enter text."
-        )
-        return
-
-    selected = algorithm.get()
-
-    if selected == "LZ77":
-        result = lz77_compress(text)
-
-    elif selected == "LZ78":
-        result = lz78_compress(text)
-
-    elif selected == "LZW":
-        result = lzw_compress(text)
-
-    result_label.configure(
-        text=result
-    )
-```
-
----
-
-# 36. Decompress Button
-
-The same idea can be used for decompression.
-
-```python
-def run_decompression():
-
-    text = textbox.get(
-        "1.0",
-        "end"
-    )
-
-    selected = algorithm.get()
-
-    if selected == "LZ77":
-        result = lz77_decompress(text)
-
-    elif selected == "LZ78":
-        result = lz78_decompress(text)
-
-    elif selected == "LZW":
-        result = lzw_decompress(text)
-
-    result_label.configure(
-        text=result
-    )
-```
-
-The exact input/output format depends on how the compression algorithms are implemented.
-
----
-
-# 37. Displaying Results
-
-The result can be displayed using a Label:
-
-```python
-result_label.configure(
-    text=result
-)
-```
-
-For large results, use a Textbox:
-
-```python
-result_textbox.delete(
-    "1.0",
-    "end"
-)
-
-result_textbox.insert(
-    "1.0",
-    result
-)
-```
-
-### Useful Textbox Operations
-
-Get:
-
-```python
-text = result_textbox.get(
-    "1.0",
-    "end"
-)
-```
-
-Delete:
-
-```python
-result_textbox.delete(
-    "1.0",
-    "end"
-)
-```
-
-Insert:
-
-```python
-result_textbox.insert(
-    "1.0",
-    result
-)
-```
-
----
-
-# 38. Compression Ratio
-
-A common compression ratio calculation is:
-
 ```text
-Compression Ratio = Compressed Size / Original Size
-```
-
-As a percentage:
-
-```text
-Compression Ratio (%) =
-(Compressed Size / Original Size) × 100
-```
-
-For example:
-
-```text
-Original Size   = 1000 bytes
-Compressed Size = 600 bytes
-
-Ratio = 600 / 1000
-      = 0.6
-      = 60%
-```
-
-The exact size calculation depends on the representation used by the project.
-
----
-
-# 39. Connecting LZ77, LZ78, and LZW
-
-Import the algorithms:
-
-```python
-from lz77 import compress as lz77_compress
-from lz78 import compress as lz78_compress
-from lzw import compress as lzw_compress
-```
-
-Create the ComboBox:
-
-```python
-algorithm = ctk.CTkComboBox(
-    app,
-    values=["LZ77", "LZ78", "LZW"]
-)
-
-algorithm.pack()
-```
-
-Then select the algorithm:
-
-```python
-selected = algorithm.get()
-```
-
-Use conditions:
-
-```python
-if selected == "LZ77":
-    result = lz77_compress(text)
-
-elif selected == "LZ78":
-    result = lz78_compress(text)
-
-elif selected == "LZW":
-    result = lzw_compress(text)
-```
-
----
-
-# 40. Project Organization
-
-Recommended structure:
-
-```text
-CompressionProject/
+project/
 │
 ├── main.py
-│
-├── lz77.py
-├── lz78.py
-├── lzw.py
-│
-├── README.md
+├── logic.py
 └── requirements.txt
 ```
 
-### `main.py`
+`logic.py`:
 
-Contains:
-
-- GUI
-    
-- Input
-    
-- Buttons
-    
-- Algorithm selection
-    
-- Output
-    
-- Application flow
-    
-
-### `lz77.py`
-
-Contains:
-
-- LZ77 compression
-    
-- LZ77 decompression
-    
-
-### `lz78.py`
-
-Contains:
-
-- LZ78 compression
-    
-- LZ78 decompression
-    
-
-### `lzw.py`
-
-Contains:
-
-- LZW compression
-    
-- LZW decompression
-    
-
-### `README.md`
-
-Contains:
-
-- Project description
-    
-- Algorithms
-    
-- Installation
-    
-- Usage
-    
-- Team information
-    
-
-### `requirements.txt`
-
-Contains project dependencies.
-
----
-
-# 41. requirements.txt
-
-For this project:
-
-```text
-customtkinter
+```python
+def process_data(text):
+    return text.upper()
 ```
 
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-# 42. `main()`
-
-Organize the application using a `main()` function:
+`main.py`:
 
 ```python
 import customtkinter as ctk
 
+from logic import process_data
+```
 
+The GUI calls the function:
+
+```python
+def process():
+
+    text = entry.get()
+
+    result = process_data(text)
+
+    result_label.configure(
+        text=result
+    )
+```
+
+---
+
+# 40. GUI → Function → Result
+
+The general architecture is:
+
+```text
+User
+ ↓
+GUI
+ ↓
+Input
+ ↓
+Python Function
+ ↓
+Processing
+ ↓
+Return Value
+ ↓
+GUI
+ ↓
+Display Result
+```
+
+The GUI should handle user interaction.
+
+The logic module should handle the actual processing.
+
+---
+
+# 41. Example Project
+
+`logic.py`:
+
+```python
+def calculate(a, b):
+    return a + b
+```
+
+`main.py`:
+
+```python
+import customtkinter as ctk
+
+from logic import calculate
+
+
+def calculate_result():
+
+    a = int(entry1.get())
+    b = int(entry2.get())
+
+    result = calculate(a, b)
+
+    result_label.configure(
+        text=f"Result: {result}"
+    )
+
+
+app = ctk.CTk()
+
+app.geometry("400x300")
+
+entry1 = ctk.CTkEntry(app)
+entry1.pack(pady=10)
+
+entry2 = ctk.CTkEntry(app)
+entry2.pack(pady=10)
+
+button = ctk.CTkButton(
+    app,
+    text="Calculate",
+    command=calculate_result
+)
+
+button.pack(pady=10)
+
+result_label = ctk.CTkLabel(
+    app,
+    text="Result:"
+)
+
+result_label.pack(pady=10)
+
+app.mainloop()
+```
+
+Architecture:
+
+```text
+entry1 ──┐
+         │
+entry2 ──┼──→ calculate()
+         │        ↓
+         │      result
+         │        ↓
+         └──→ result_label
+```
+
+---
+
+# Part 11 — Organizing the Application
+
+# 42. Using `main()`
+
+Instead of creating everything globally:
+
+```python
 def main():
 
     app = ctk.CTk()
 
-    app.title("Data Compression")
+    app.title("My Application")
     app.geometry("600x400")
 
-    # Create GUI widgets here
+    # Create widgets here
 
     app.mainloop()
 
@@ -1468,190 +1449,417 @@ if __name__ == "__main__":
 
 Runs `main()` when the file is executed directly.
 
-If another file imports this module:
+If the file is imported:
 
 ```python
 import main
 ```
 
-the GUI will not automatically start.
+the `main()` function will not automatically run.
+
+This prevents the GUI from starting unexpectedly when the module is imported.
 
 ---
 
-# 43. Final GUI
+# 43. Recommended Project Structure
 
-A possible final interface:
+For a larger application:
 
 ```text
-┌────────────────────────────────────────┐
-│          LOSSLESS COMPRESSION          │
-│                                        │
-│ Algorithm: [ LZ77 ▼ ]                  │
-│                                        │
-│ Input:                                 │
-│ ┌────────────────────────────────────┐ │
-│ │ Enter your text here...            │ │
-│ │                                    │ │
-│ │                                    │ │
-│ └────────────────────────────────────┘ │
-│                                        │
-│ [ Compress ]      [ Decompress ]       │
-│                                        │
-│ Result:                                │
-│ ┌────────────────────────────────────┐ │
-│ │                                    │ │
-│ │ Compressed data                    │ │
-│ └────────────────────────────────────┘ │
-│                                        │
-│ Compression Ratio: 60%                 │
-│                                        │
-│ [ Save Result ]                        │
-└────────────────────────────────────────┘
+project/
+│
+├── main.py
+├── gui.py
+├── logic.py
+├── utils.py
+│
+├── requirements.txt
+└── README.md
+```
+
+Possible responsibilities:
+
+### `main.py`
+
+Starts the application.
+
+### `gui.py`
+
+Contains GUI-related code.
+
+### `logic.py`
+
+Contains the main application logic.
+
+### `utils.py`
+
+Contains reusable helper functions.
+
+### `requirements.txt`
+
+Contains external dependencies.
+
+---
+
+# Part 12 — Building a Clean GUI
+
+# 44. Use Frames to Divide the Interface
+
+Example:
+
+```python
+header_frame = ctk.CTkFrame(app)
+header_frame.pack(
+    fill="x",
+    padx=20,
+    pady=10
+)
+
+content_frame = ctk.CTkFrame(app)
+content_frame.pack(
+    fill="both",
+    expand=True,
+    padx=20,
+    pady=10
+)
+
+footer_frame = ctk.CTkFrame(app)
+footer_frame.pack(
+    fill="x",
+    padx=20,
+    pady=10
+)
+```
+
+Structure:
+
+```text
+Application
+│
+├── Header
+│
+├── Content
+│
+└── Footer
 ```
 
 ---
 
-# 44. Final Application Architecture
+# 45. Example Clean Layout
 
 ```text
-                    main.py
-                       │
-          ┌────────────┼────────────┐
-          ↓            ↓            ↓
-         GUI       Algorithms     File I/O
-          │            │
-          │      ┌─────┼─────┐
-          │      ↓     ↓     ↓
-          │     LZ77  LZ78  LZW
-          │
-          ↓
-      Display Result
-```
-
-Application flow:
-
-```text
-User
- ↓
-Input
- ↓
-Select Algorithm
- ↓
-Compress / Decompress
- ↓
-Algorithm Function
- ↓
-Return Result
- ↓
-Display Result
- ↓
-Save Result
+┌─────────────────────────────────────┐
+│              TITLE                  │
+├─────────────────────────────────────┤
+│                                     │
+│  Input:                             │
+│  ┌───────────────────────────────┐  │
+│  │                               │  │
+│  │           Textbox             │  │
+│  │                               │  │
+│  └───────────────────────────────┘  │
+│                                     │
+│      [ Process ]    [ Clear ]       │
+│                                     │
+│  Result:                            │
+│  ┌───────────────────────────────┐  │
+│  │                               │  │
+│  │           Result              │  │
+│  │                               │  │
+│  └───────────────────────────────┘  │
+│                                     │
+└─────────────────────────────────────┘
 ```
 
 ---
 
-# 45. Must Know
+# 46. Clear Button
+
+A Clear button can remove user input.
+
+```python
+def clear_text():
+
+    textbox.delete(
+        "1.0",
+        "end"
+    )
+
+    result_label.configure(
+        text="Result:"
+    )
+```
+
+Create the button:
+
+```python
+clear_button = ctk.CTkButton(
+    app,
+    text="Clear",
+    command=clear_text
+)
+
+clear_button.pack()
+```
+
+---
+
+# 47. Complete Basic Application
+
+```python
+import customtkinter as ctk
+from tkinter import messagebox
+
+
+def process_data(text):
+    return text.upper()
+
+
+def process():
+
+    text = textbox.get(
+        "1.0",
+        "end"
+    )
+
+    if not text.strip():
+
+        messagebox.showerror(
+            "Error",
+            "Please enter some text."
+        )
+
+        return
+
+    result = process_data(text)
+
+    result_textbox.delete(
+        "1.0",
+        "end"
+    )
+
+    result_textbox.insert(
+        "1.0",
+        result
+    )
+
+
+def clear():
+
+    textbox.delete(
+        "1.0",
+        "end"
+    )
+
+    result_textbox.delete(
+        "1.0",
+        "end"
+    )
+
+
+def main():
+
+    ctk.set_appearance_mode("system")
+    ctk.set_default_color_theme("blue")
+
+    app = ctk.CTk()
+
+    app.title("My Application")
+    app.geometry("700x500")
+
+    title = ctk.CTkLabel(
+        app,
+        text="My Application",
+        font=("Arial", 24, "bold")
+    )
+
+    title.pack(pady=20)
+
+    textbox = ctk.CTkTextbox(
+        app,
+        height=150
+    )
+
+    textbox.pack(
+        padx=20,
+        pady=10,
+        fill="both",
+        expand=True
+    )
+
+    process_button = ctk.CTkButton(
+        app,
+        text="Process",
+        command=process
+    )
+
+    process_button.pack(pady=10)
+
+    clear_button = ctk.CTkButton(
+        app,
+        text="Clear",
+        command=clear
+    )
+
+    clear_button.pack(pady=10)
+
+    result_textbox = ctk.CTkTextbox(
+        app,
+        height=150
+    )
+
+    result_textbox.pack(
+        padx=20,
+        pady=10,
+        fill="both",
+        expand=True
+    )
+
+    app.mainloop()
+
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+# Part 13 — Important Concepts
 
 ## Widgets
 
-- `CTk`
-    
-- `CTkLabel`
-    
-- `CTkButton`
-    
-- `CTkEntry`
-    
-- `CTkTextbox`
-    
-- `CTkFrame`
-    
-- `CTkComboBox`
-    
+Know how to use:
+
+```text
+CTkLabel
+CTkButton
+CTkEntry
+CTkTextbox
+CTkComboBox
+CTkCheckBox
+CTkSwitch
+CTkSlider
+CTkProgressBar
+CTkFrame
+CTkScrollableFrame
+```
 
 ## Layout
 
-- `pack()`
-    
-- `grid()`
-    
-- `place()`
-    
+Know:
+
+```text
+pack()
+grid()
+place()
+```
+
+and:
+
+```text
+padx
+pady
+fill
+expand
+row
+column
+columnspan
+weight
+```
 
 ## Interaction
 
-- `command`
-    
-- `.get()`
-    
-- `.configure()`
-    
-- callbacks
-    
-- events
-    
-
-## Application Features
-
-- `filedialog`
-    
-- `messagebox`
-    
-- input validation
-    
-- `main()`
-    
-
-## Project Structure
-
-Keep the GUI code separate from the compression algorithms.
-
----
-
-# 46. Nice to Have
-
-- `CTkCheckBox`
-    
-- `CTkSwitch`
-    
-- `CTkProgressBar`
-    
-- `CTkSlider`
-    
-- `CTkScrollableFrame`
-    
-- `StringVar`
-    
-- Dark/Light mode
-    
-- Themes
-    
-- Custom colors
-    
-- Custom fonts
-    
-
----
-
-# 47. Key Concept
-
-The GUI and compression algorithms should have separate responsibilities.
+Know:
 
 ```text
-GUI
- │
- ├── Get input
- ├── Get user choices
- ├── Call functions
- └── Display results
-
-Algorithms
- │
- ├── LZ77
- ├── LZ78
- └── LZW
+command
+callback
+get()
+configure()
+insert()
+delete()
+StringVar
 ```
 
-The GUI should not contain the compression logic.
+## User Input
 
-The compression modules should not depend on CustomTkinter.
+Know:
+
+```text
+Entry input
+Textbox input
+ComboBox selection
+CheckBox state
+Switch state
+Slider value
+```
+
+## Files
+
+Know:
+
+```text
+filedialog.askopenfilename()
+filedialog.asksaveasfilename()
+open()
+read()
+write()
+```
+
+## Errors
+
+Know:
+
+```text
+messagebox.showinfo()
+messagebox.showwarning()
+messagebox.showerror()
+```
+
+---
+
+# 14. Final Mental Model
+
+When building a CustomTkinter application, think in this order:
+
+```text
+1. Create Window
+        ↓
+2. Create Frames
+        ↓
+3. Create Widgets
+        ↓
+4. Arrange Widgets
+        ↓
+5. Get User Input
+        ↓
+6. Run Python Logic
+        ↓
+7. Get Result
+        ↓
+8. Update GUI
+        ↓
+9. Save / Display Result
+```
+
+The most important architecture is:
+
+```text
+              GUI
+               │
+        ┌──────┴──────┐
+        ↓             ↓
+      Input         Events
+        │             │
+        └──────┬──────┘
+               ↓
+          Python Logic
+               │
+               ↓
+            Result
+               │
+               ↓
+              GUI
+```
+
+Keep the GUI responsible for **interaction and presentation**, and keep the actual application logic in separate Python functions or modules.
