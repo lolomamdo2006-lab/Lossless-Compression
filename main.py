@@ -7,11 +7,6 @@ def main():
     print("4. Exit")
 
     choice = input("Choose an algorithm: ")
-
-    if choice == "4":
-        print("Goodbye!")
-        return
-
     text = input("Enter text to compress: ")
     match choice:
         case 1:

@@ -1,6 +1,6 @@
-def compress(text):
+def compress():
     # LZ77 algorithm
-    pass
+    return "compressed"
 
 def decompress(data):
     # LZ77 decompression
