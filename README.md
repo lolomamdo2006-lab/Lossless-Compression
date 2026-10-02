@@ -38,8 +38,8 @@ Builds a dictionary dynamically while processing the input and represents repeat
 
 This project uses:
 
-Python — Programming language
-CustomTkinter — GUI library for building the graphical user interface
+* **Python — Programming language**
+* **CustomTkinter — GUI library for building the graphical user interface**
 
 ## Course
 

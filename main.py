@@ -1,4 +1,5 @@
 from lz77 import compress as lz77_compress
+from lz78 import compress_to_lz78
 def main():
     print("===== Lossless Compression =====")
     print("1. LZ77")
@@ -9,16 +10,17 @@ def main():
     choice = input("Choose an algorithm: ")
     text = input("Enter text to compress: ")
     match choice:
-        case 1:
+        case "1":
             #Lz77
             pass
-        case 2:
+        case "2":
+            compress_to_lz78(text)
             #Lz88
             pass
-        case 3:
+        case "3":
             #lwz
             pass
-        case 4:
+        case "4":
             print("Goodbye!")
 
         case _:
