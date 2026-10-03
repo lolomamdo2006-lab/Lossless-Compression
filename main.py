@@ -11,7 +11,7 @@ def main():
     text = input("Enter text to compress: ")
     match choice:
         case "1":
-            #Lz77
+            lz77_compress(text)
             pass
         case "2":
             compress_to_lz78(text)
