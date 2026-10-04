@@ -22,3 +22,4 @@ def compress(text):
 def decompress(data):
     # LZ77 decompression
     pass
+#ABAABABAABBBBBBBBBBBBA
