@@ -1,6 +1,13 @@
 import math
 
+def parse_tags(tags_string):
+    tags = []
+    parts = tags_string.split(",")
+    for part in parts:
+        index, symbol = part.strip().split()
+        tags.append((int(index), symbol))
 
+    return tags
 def compress_to_lz78(data):
     dictionary={}
     tags=[]
@@ -32,6 +39,7 @@ def compress_to_lz78(data):
                 dictionary[longest+data[i]]=lastindex
                 i+=1
                 break
+
     print("Tags: ")
     for tag in tags:
         print(tag)
@@ -39,7 +47,8 @@ def compress_to_lz78(data):
     for symbol,index in dictionary.items():
         print(index,":",symbol)
     compression_ratio(data,len(tags),max_index)
-    decompress_lz78(tags)
+    #decompress_lz78(tags)
+    return tags
 
 #ABAABABAABABBBBBBBBBBA
 def compression_ratio(data,tags,max_index):
@@ -47,7 +56,8 @@ def compression_ratio(data,tags,max_index):
 
     print(f"Compressed Size: {tags*(8+ max_index.bit_length())} bits")
 
-def decompress_lz78(tags):
+def decompress_lz78(str_tags):
+    tags=parse_tags(str_tags)
     dic = [""]
     data = ""
     for tag in tags:
@@ -57,6 +67,9 @@ def decompress_lz78(tags):
         else:
             data += dic[index] + symbol
             dic.append(dic[index] + symbol)
-
+    
     print(data)
+    return data
 #ABAABABAABABBBBBBBBBBA
+#0 A,0 B,1 A,2 A,4 A,4 B,2 B,7 B,8 B,1 Null
+#xyxyxyxyxyxyzzzzzzzz

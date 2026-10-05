@@ -17,6 +17,7 @@ def compress(text):
         window+=length+1
         i+=length+1
     print(tags)
+    return tags
                 
 
 def decompress(data):

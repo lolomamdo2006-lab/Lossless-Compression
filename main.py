@@ -1,5 +1,6 @@
 from lz77 import compress as lz77_compress
 from lz78 import compress_to_lz78
+from lz78 import decompress_lz78
 
 
 def compression_menu():
@@ -44,8 +45,8 @@ def decompression_menu():
         # lz77_decompress(compressed_data)
 
     elif choice == "2":
-        compressed_data = input("Enter compressed data: ")
-        # lz78_decompress(compressed_data)
+        compressed_data = input("Enter compressed data like 0 A,0 B : ")
+        decompress_lz78(compressed_data)
 
     elif choice == "3":
         compressed_data = input("Enter compressed data: ")
