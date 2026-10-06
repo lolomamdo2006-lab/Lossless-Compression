@@ -43,7 +43,7 @@ def decompression_menu():
     choice = input("Choose an algorithm: ")
 
     if choice == "1":
-        data = input("Enter tags like 0,0,A 0,0,B 2,1,A : ")
+        data = input("Enter tags like 0 0 A, 0 0 B, 2 1 A : ")
         tags = lz77.read_tags(data)
         text = lz77.decompress(tags)
         print("Text:", text)

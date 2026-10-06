@@ -21,10 +21,9 @@ def compress(text):
     return tags
                 
 def read_tags(data):
-
     tags = []
-    for item in data.split():
-        position, length, next_sombol = item.split(",")
+    for item in data.split(","):
+        position, length, next_sombol = item.split()
         tags.append((int(position), int(length), next_sombol))
     return tags
 
