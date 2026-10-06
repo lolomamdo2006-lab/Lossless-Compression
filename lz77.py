@@ -18,7 +18,6 @@ def compress(text):
         tags.append((position,length,next_sombol))
         window+=length+1
         i+=length+1
-    print(tags)
     return tags
                 
 def read_tags(data):
@@ -36,7 +35,7 @@ def decompress(tags):
         for x in range(length):
             text+=text[start_index+x]
         text+=next_sombol
-    print(text)
+    
     return text
 
 def compression_ratio(text, tags):

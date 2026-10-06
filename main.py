@@ -1,4 +1,4 @@
-from lz77 import compress as lz77_compress
+import lz77
 from lz78 import compress_to_lz78
 from lz78 import decompress_lz78
 
@@ -14,7 +14,9 @@ def compression_menu():
 
     if choice == "1":
         text = input("Enter text to compress: ")
-        lz77_compress(text)
+        tags=lz77.compress(text)
+        print("Tags: ",tags)
+        lz77.compression_ratio(text,tags)
 
     elif choice == "2":
         text = input("Enter text to compress: ")
@@ -41,12 +43,16 @@ def decompression_menu():
     choice = input("Choose an algorithm: ")
 
     if choice == "1":
-        compressed_data = input("Enter compressed data: ")
-        # lz77_decompress(compressed_data)
+        data = input("Enter tags like 0,0,A 0,0,B 2,1,A : ")
+        tags = lz77.read_tags(data)
+        text = lz77.decompress(tags)
+        print("Text:", text)
+        lz77.compression_ratio(text, tags)
 
     elif choice == "2":
-        compressed_data = input("Enter compressed data like 0 A,0 B : ")
-        decompress_lz78(compressed_data)
+        data = input("Enter compressed data like 00A00B")
+        text=lz77.read_tags(data)
+        print("compressed data : ", text)
 
     elif choice == "3":
         compressed_data = input("Enter compressed data: ")
