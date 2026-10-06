@@ -1,6 +1,6 @@
 from lz78 import compress_to_lz78
 from lz78 import decompress_lz78
-from lz77 import compress
+import lz77
 import customtkinter as ctk
 from tkinter import filedialog
 app = ctk.CTk()
@@ -21,7 +21,7 @@ def run_compression():
         result = compress_to_lz78(data)
         label.configure(text=result)
     elif selected=="Lz77":
-        result=compress(data)
+        result = lz77.compress(data)
         label.configure(text=result)
     
 def run_decompress():
@@ -32,7 +32,8 @@ def run_decompress():
         result = decompress_lz78(data)
         label.configure(text=result)
     elif selected=="Lz77":
-        #call your function (mariam)
+        tags = lz77.read_tags(data)
+        result = lz77.decompress(tags)
         label.configure(text=result)
 
 
