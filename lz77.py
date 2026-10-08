@@ -52,7 +52,7 @@ def compression_ratio(text, tags):
 
 
 #_____________________________________________________________________#
-#inputs:
+#inputs:0
 #[(0,0,"A"),(0,0,"B"),(2,1,"A"),(3,2,"B"),(5,3,"B"),(1,10,"A")]
 #CABRACADABRARRARRAD
 #ABAABABABABABABABABABA

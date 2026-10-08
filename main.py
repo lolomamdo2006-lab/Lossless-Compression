@@ -52,9 +52,8 @@ def decompression_menu():
         lz77.compression_ratio(text, tags)
 
     elif choice == "2":
-        data = input("Enter compressed data like 00A00B")
-        text=lz77.read_tags(data)
-        print("compressed data : ", text)
+        data = input("Enter compressed data like 0 A,1 B: ")
+        decompress_lz78(data)
 
     elif choice == "3":
         compressed_data = input("Enter compressed data: ")
