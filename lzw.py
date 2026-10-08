@@ -77,8 +77,9 @@ def lzw_decompress_fuc(compressed_data):
      print("Decompressed Text:", afterdecompress)
      return afterdecompress 
 
-def lzw_clean_fuc(data):
-   clean_data = data.replace("[", "").replace("]", "").replace(",", "")
+def lzw_clean_fuc(data): 
+    clean_data = data.replace("[", "").replace("]", "").replace(",", "")
+    return clean_data
      
 #lzw_decompress_fuc()
 

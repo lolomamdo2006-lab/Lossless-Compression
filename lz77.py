@@ -19,6 +19,7 @@ def compress_lz77(text):
         window+=length+1
         i+=length+1
     return tags
+
                 
 def read_tags(data):
      tags = []
