@@ -1,7 +1,65 @@
-import lz77
+from lz77 import compress_lz77,read_tags,decompress_lz77,compression_ratio_lz77
 from lz78 import compress_to_lz78
 from lz78 import decompress_lz78
 from lzw import lzw_compress_fuc, lzw_decompress_fuc
+from handling_files import read_file
+def file_save(data):
+    filename = input("Enter filename to save: ")
+    filepath= input("Enter file path to save: ")
+    filename = filepath + "/" + filename
+
+    with open(filename, "w") as file:
+        file.write(str(data))
+    print(f"Data saved to {filename}")
+
+
+
+def getInput_compresion():
+    print("\n===== File or Text =====")
+    print("1. File")
+    print("2. Text")
+   
+
+    choice = input("Choose an option: ")
+
+    if choice == "1":
+       filename = input("Enter filename: ")
+       data = read_file(filename)
+       return data
+
+
+    elif choice == "2":
+        text = input("Enter text: ")
+        return text
+
+
+    else:
+        print("Invalid choice!")
+
+
+def getInput_decompresion(choice):
+    print("\n===== Decompression Input =====")
+    print("1. Enter Compressed Data")
+    print("2. Read from File")
+
+    input_choice = input("Choose Input Type: ")
+
+    if input_choice == "1":
+        if choice == "1":
+            return input("Enter tags like 0 0 A, 0 0 B, 2 1 A : ")
+        elif choice == "2":
+            return input("Enter tags like 0 A, 0 B, 1 A : ")
+        elif choice == "3":
+            return input("Enter codes like 97 98 256 : ")
+
+    elif input_choice == "2":
+        filename = input("Enter file name: ")
+        return read_file(filename)
+
+    else:
+        print("Invalid choice!")
+        return None
+
 
 
 def compression_menu():
@@ -12,27 +70,39 @@ def compression_menu():
     print("4. Back")
 
     choice = input("Choose an algorithm: ")
+    compressed_data = ""
+
 
     if choice == "1":
-        text = input("Enter text to compress: ")
-        tags=lz77.compress(text)
+        file_or_text = getInput_compresion()
+        tags=compress_lz77(file_or_text)
         print("Tags: ",tags)
-        lz77.compression_ratio(text,tags)
+        compression_ratio_lz77(file_or_text,tags)
+        compressed_data = ", ".join(f"{p} {l} {s}" for p, l, s in tags)
 
     elif choice == "2":
-        text = input("Enter text to compress: ")
-        compress_to_lz78(text)
+        file_or_text = getInput_compresion()
+        tags = compress_to_lz78(file_or_text)
+        compressed_data = ", ".join(f"{i} {sym}" for i, sym in tags)
 
     elif choice == "3":
-        text = input("Enter text to compress: ")
-        lzw_compress_fuc(text)
-        
+        file_or_text = getInput_compresion()
+        compressed_data = lzw_compress_fuc(file_or_text)
 
     elif choice == "4":
         return
 
     else:
         print("Invalid choice!")
+    save_choice = input("Do you want to save the compressed data? (y/n): ")
+    if save_choice.lower() == "y":
+        file_save(compressed_data) 
+    if save_choice.lower() == "n":
+        print("Data not saved.")
+
+
+        
+
 
 
 def decompression_menu():
@@ -43,28 +113,37 @@ def decompression_menu():
     print("4. Back")
 
     choice = input("Choose an algorithm: ")
+    decompressed_data = ""
 
     if choice == "1":
-        data = input("Enter tags like 0 0 A, 0 0 B, 2 1 A : ")
-        tags = lz77.read_tags(data)
-        text = lz77.decompress(tags)
-        print("Text:", text)
-        lz77.compression_ratio(text, tags)
+        file_or_text = getInput_decompresion(choice)
+        tags = read_tags(file_or_text)
+        decompressed_data = decompress_lz77(tags)
+        print("Text:", decompressed_data)
 
     elif choice == "2":
-        data = input("Enter compressed data like 00A00B")
-        text=lz77.read_tags(data)
-        print("compressed data : ", text)
+        
+        file_or_text = getInput_decompresion(choice)
+        decompressed_data = decompress_lz78(file_or_text)
+        
 
     elif choice == "3":
-        compressed_data = input("Enter compressed data: ")
-        lzw_decompress_fuc(compressed_data)
+        file_or_text = getInput_decompresion(choice)
+        clean_data = file_or_text.replace("[", "").replace("]", "").replace(",", "")
+        decompressed_data = lzw_decompress_fuc(clean_data)
 
     elif choice == "4":
         return
 
     else:
         print("Invalid choice!")
+    save_choice = input("Do you want to save the decompressed data? (y/n): ")
+    if save_choice.lower() == "y":
+        file_save(decompressed_data)
+    elif save_choice.lower() == "n":
+        print("Data not saved.")
+
+
 
 
 def main():
