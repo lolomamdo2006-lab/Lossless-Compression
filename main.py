@@ -1,7 +1,7 @@
 from lz77 import compress_lz77,read_tags,decompress_lz77,compression_ratio_lz77,lz77_to_text
 from lz78 import compress_to_lz78
 from lz78 import decompress_lz78,lz78_to_text
-from lzw import lzw_compress_fuc, lzw_decompress_fuc,lzw_decompress_fuc
+from lzw import lzw_compress_fuc, lzw_decompress_fuc,lzw_clean_fuc
 from handling_files import read_file
 
 def file_save(data):
@@ -16,51 +16,50 @@ def file_save(data):
 
 
 def getInput_compresion():
-    print("\n===== File or Text =====")
-    print("1. File")
-    print("2. Text")
-   
+    while True:
+        print("\n===== File or Text =====")
+        print("1. File")
+        print("2. Text")
 
-    choice = input("Choose an option: ")
+        choice = input("Choose an option: ")
 
-    if choice == "1":
-       filename = input("Enter filename: ")
-       data = read_file(filename)
-       return data
+        if choice == "1":
+            filename = input("Enter filename: ")
+            data = read_file(filename)
+            return data
 
+        elif choice == "2":
+            text = input("Enter text: ")
+            return text
 
-    elif choice == "2":
-        text = input("Enter text: ")
-        return text
-
-
-    else:
-        print("Invalid choice!")
+        else:
+            print("Invalid choice! Please choose 1 or 2.")
 
 
 def getInput_decompresion(choice):
-    print("\n===== Decompression Input =====")
-    print("1. Enter Compressed Data")
-    print("2. Read from File")
+    while True:
+        print("\n===== Decompression Input =====")
+        print("1. Enter Compressed Data")
+        print("2. Read from File")
 
-    input_choice = input("Choose Input Type: ")
+        input_choice = input("Choose Input Type: ")
 
-    if input_choice == "1":
-        if choice == "1":
-            return input("Enter tags like 0 0 A, 0 0 B, 2 1 A : ")
-        elif choice == "2":
-            return input("Enter tags like 0 A, 0 B, 1 A : ")
-        elif choice == "3":
-            return input("Enter codes like 65 66 128 : ")
+        if input_choice == "1":
+            if choice == "1":
+                return input("Enter tags like 0 0 A, 0 0 B, 2 1 A : ")
 
-    elif input_choice == "2":
-        filename = input("Enter file name: ")
-        return read_file(filename)
+            elif choice == "2":
+                return input("Enter tags like 0 A, 0 B, 1 A : ")
 
-    else:
-        print("Invalid choice!")
-        return None
+            elif choice == "3":
+                return input("Enter codes like 65 66 128 : ")
 
+        elif input_choice == "2":
+            filename = input("Enter file name: ")
+            return read_file(filename)
+
+        else:
+            print("Invalid choice! Please choose 1 or 2.")
 
 
 def compression_menu():
@@ -130,7 +129,7 @@ def decompression_menu():
 
     elif choice == "3":
         file_or_text = getInput_decompresion(choice)
-        clean_data = lzw_decompress_fuc(file_or_text)
+        clean_data = lzw_clean_fuc(file_or_text)
         decompressed_data = lzw_decompress_fuc(clean_data)
 
     elif choice == "4":
