@@ -76,6 +76,9 @@ def lzw_decompress_fuc(compressed_data):
          current_char = new
      print("Decompressed Text:", afterdecompress)
      return afterdecompress 
+
+def lzw_decompress_fuc(data):
+   clean_data = data.replace("[", "").replace("]", "").replace(",", "")
      
 #lzw_decompress_fuc()
 

@@ -70,6 +70,9 @@ def decompress_lz78(str_tags):
     
     print(data)
     return data
+
+def lz78_to_text(tags):
+    return ", ".join(f"{i} {sym}" for i, sym in tags)
 #ABAABABAABABBBBBBBBBBA
 #0 A,0 B,1 A,2 A,4 A,4 B,2 B,7 B,8 B,1 Null
 #xyxyxyxyxyxyzzzzzzzz

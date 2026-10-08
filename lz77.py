@@ -21,14 +21,15 @@ def compress_lz77(text):
     return tags
                 
 def read_tags(data):
-     clean_data = (data.replace("[", "").replace("]", "")
-                              .replace("(", "").replace(")", "")
-                              .replace("'", "").replace('"', ""))
      tags = []
-     for item in clean_data.split(","):
+     for item in data.split(","):
         position, length, next_sombol = item.split()
         tags.append((int(position), int(length), next_sombol))
      return tags
+
+def lz77_to_text(tags):
+    return ", ".join(f"{p} {l} {s}" for p, l, s in tags)
+
 
 def decompress_lz77(tags):
     text=""
