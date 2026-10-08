@@ -1,6 +1,6 @@
 import math
 
-def compress(text):
+def compress_lz77(text):
     i=0
     window=0
     tags=[]
@@ -19,15 +19,20 @@ def compress(text):
         window+=length+1
         i+=length+1
     return tags
+
                 
 def read_tags(data):
-    tags = []
-    for item in data.split(","):
+     tags = []
+     for item in data.split(","):
         position, length, next_sombol = item.split()
         tags.append((int(position), int(length), next_sombol))
-    return tags
+     return tags
 
-def decompress(tags):
+def lz77_to_text(tags):
+    return ", ".join(f"{p} {l} {s}" for p, l, s in tags)
+
+
+def decompress_lz77(tags):
     text=""
     for position,length,next_sombol in tags:
         start_index=len(text)-position
@@ -37,7 +42,7 @@ def decompress(tags):
     
     return text
 
-def compression_ratio(text, tags):
+def compression_ratio_lz77(text, tags):
     original_size = len(text) * 8
 
     position_bits = max(t[0] for t in tags).bit_length()
@@ -56,4 +61,5 @@ def compression_ratio(text, tags):
 #[(0,0,"A"),(0,0,"B"),(2,1,"A"),(3,2,"B"),(5,3,"B"),(1,10,"A")]
 #CABRACADABRARRARRAD
 #ABAABABABABABABABABABA
+#0 0 C , 0 0 A , 0 0 B ,0 0 R , 3 1 C , 2 1 D , 7 4 R , 3 5 D
 #_____________________________________________________________________#

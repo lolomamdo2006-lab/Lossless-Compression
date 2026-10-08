@@ -1,4 +1,10 @@
-
+#from list to string (By Alaa)
+def lzw_to_text(tag):
+    tag_as_string=""
+    for x in tag:
+        tag_as_string+=str(x)
+        tag_as_string+=" "
+    return tag_as_string
 def lzw_compress_fuc(text):
    
     dictionary = {}
@@ -26,6 +32,7 @@ def lzw_compress_fuc(text):
     
     mylist.append(dictionary[current])
     print("Compressed List:", mylist)
+    return mylist #Alaa
 
     def lzw_compression_ratio(text):
      original_size = len(text) * 8
@@ -76,6 +83,10 @@ def lzw_decompress_fuc(compressed_data):
          current_char = new
      print("Decompressed Text:", afterdecompress)
      return afterdecompress 
+
+def lzw_clean_fuc(data): 
+    clean_data = data.replace("[", "").replace("]", "").replace(",", "")
+    return clean_data
      
 #lzw_decompress_fuc()
 

@@ -1,10 +1,10 @@
-from lz78 import compress_to_lz78
-from lz78 import decompress_lz78
-from lz78 import parse_string
-from BinaryHandling import from_tag__to_Binary
-import lz77
 import customtkinter as ctk
 from tkinter import filedialog
+from BinaryHandling import from_tag__to_Binary
+from lz77 import *
+from lz78 import *
+from lzw import *
+
 app = ctk.CTk()
 app.title("Data Compression")
 app.geometry("600x400")
@@ -22,11 +22,11 @@ def run_compression():
     selected = options.get()
     if selected=="Lz78":
         result = compress_to_lz78(data)
-        from_tag__to_Binary(result)
-        label.configure(text=result)
     elif selected=="Lz77":
-        result = lz77.compress(data)
-        label.configure(text=result)
+        result = compress_lz77(data)
+    elif selected=="Lzw":
+        result=lzw_compress_fuc(data)
+    label.configure(text=result)
 #========================================  
 def run_decompress():
     global data
@@ -36,11 +36,13 @@ def run_decompress():
     selected = options.get()
     if selected=="Lz78":
         result = decompress_lz78(data)
-        label.configure(text=result)
     elif selected=="Lz77":
-        tags = lz77.read_tags(data)
-        result = lz77.decompress(tags)
-        label.configure(text=result)
+        tags = read_tags(data)
+        result = decompress_lz77(tags)
+    elif selected=="Lzw":
+        clean_data = lzw_clean_fuc(data)
+        result = lzw_decompress_fuc(clean_data)
+    label.configure(text=result)
 #===================
 def upload_file():
            global data
@@ -54,10 +56,17 @@ def change_data(event):
 def save_file_txt():
     global result
     global stat
+    selected = options.get()
     if(stat):
       content=result
     else:
-     content=parse_string(result)
+        if selected=="Lz78":
+            content=parse_string(result)
+        elif selected=="Lz77":
+            content=lz77_to_text(result)
+        elif selected== "Lzw":
+            print("alaa")
+            content=lzw_to_text(result)
     file_path = filedialog.asksaveasfilename(title="Save File", defaultextension=".txt",filetypes=[
     ("Text Files", "*.txt"),
     ("All Files", "*.*")
@@ -69,53 +78,98 @@ def save_file_txt():
 def save_file_bin():
     pass
 #=================== GUI
-label = ctk.CTkLabel(app, text="the result")
-label.grid(row=1,column=1,padx=10, pady=10)
 
-options = ctk.CTkComboBox(app,values=["Lz77","Lz78","Lzw"])
-options.grid(row=0,column=0,padx=10, pady=10)
 
-entry = ctk.CTkEntry(app,placeholder_text="Enter your data...")
+import customtkinter as ctk
+
+app.columnconfigure((0, 1), weight=1)
+
+options = ctk.CTkComboBox(
+    app,
+    values=["Lz77", "Lz78", "Lzw"],
+    height=38,
+    font=("Segoe UI", 13),
+    dropdown_font=("Segoe UI", 13)
+)
+options.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 10), sticky="ew")
+
+entry = ctk.CTkEntry(
+    app,
+    placeholder_text="Enter your data...",
+    height=38,
+    font=("Segoe UI", 13)
+)
 entry.bind("<KeyRelease>", change_data)
-entry.grid(row=3,column=0)
+entry.grid(row=1, column=0, columnspan=2, padx=20, pady=10, sticky="ew")
 
-entry_file=ctk.CTkButton(app,text="Upload file",command=upload_file,fg_color="#1976D2",
-    hover_color="#1565C0")
-entry_file.grid(row=4,column=0,)
+entry_file = ctk.CTkButton(
+    app,
+    text="📁 Upload File",
+    command=upload_file,
+    height=38,
+    font=("Segoe UI", 13, "bold"),
+    fg_color="#1F6AA5",
+    hover_color="#144870"
+)
+entry_file.grid(row=2, column=0, columnspan=2, padx=20, pady=10, sticky="ew")
 
-Save_txt=ctk.CTkButton(app,text="Save file.txt",command=save_file_txt,fg_color="#EF6C00",
-    hover_color="#E65100")
-Save_txt.grid(row=5,column=0,padx=10, pady=10)
+compress_button = ctk.CTkButton(
+    app,
+    text="⚡ Compress",
+    command=run_compression,
+    height=40,
+    font=("Segoe UI", 13, "bold"),
+    fg_color="#2FA572",
+    hover_color="#1E6B49"
+)
+compress_button.grid(row=3, column=0, padx=(20, 5), pady=15, sticky="ew")
 
-Save_binary=ctk.CTkButton(app,text="Save file.bin",command=save_file_bin,fg_color="#E96005",
-    hover_color="#E96004")
-Save_binary.grid(row=5,column=1)
+Decompress_button = ctk.CTkButton(
+    app,
+    text="🔓 Decompress",
+    command=run_decompress,
+    height=40,
+    font=("Segoe UI", 13, "bold"),
+    fg_color="#2FA572",
+    hover_color="#1E6B49"
+)
+Decompress_button.grid(row=3, column=1, padx=(5, 20), pady=15, sticky="ew")
 
-compress_button =ctk.CTkButton(app,text="Compress",command=run_compression,
-    fg_color="#2E7D32",
-    hover_color="#1B5E20")
-compress_button .grid(row=0,column=1,padx=10, pady=10)
+label = ctk.CTkLabel(
+    app,
+    text="the result",
+    height=50,
+    corner_radius=8,
+    fg_color=("gray85", "#2B2B2B"),
+    font=("Segoe UI", 14)
+)
+label.grid(row=4, column=0, columnspan=2, padx=20, pady=15, sticky="ew")
 
-Decompress_button =ctk.CTkButton(app,text="Decompress",command=run_decompress,
-    fg_color="#7B1FA2",
-    hover_color="#6A1B9A")
-Decompress_button.grid(row=0,column=2)
+Save_txt = ctk.CTkButton(
+    app,
+    text="💾 Save file.txt",
+    command=save_file_txt,
+    height=38,
+    font=("Segoe UI", 12, "bold"),
+    fg_color="#3B3B3B",
+    hover_color="#2B2B2B",
+    border_width=1,
+    border_color="#555555"
+)
+Save_txt.grid(row=5, column=0, padx=(20, 5), pady=(5, 20), sticky="ew")
+
+Save_binary = ctk.CTkButton(
+    app,
+    text="💾 Save file.bin",
+    command=save_file_bin,
+    height=38,
+    font=("Segoe UI", 12, "bold"),
+    fg_color="#3B3B3B",
+    hover_color="#2B2B2B",
+    border_width=1,
+    border_color="#555555"
+)
+Save_binary.grid(row=5, column=1, padx=(5, 20), pady=(5, 20), sticky="ew")
 
 
-
-"""def segment_click(value):
-    if value == "Input Text":
-        entry.configure(state="normal")
-    else:
-           global data
-           entry.configure(state="disabled")
-           file_path = filedialog.askopenfilename()
-           file=open(file_path)
-           data=file.read()"""
-
-        
-
-"""segemented_button = ctk.CTkSegmentedButton(app, values=["Input Text", "Upload File"], command=segment_click)
-segemented_button.set("Input Text")
-segemented_button.grid(row=1,column=0)"""
 app.mainloop()
