@@ -1,35 +1,41 @@
 import math
 
-def compress_lz77(text):
+def compress_lz77(text,search_window,lookahead):
     i=0
-    window=0
     tags=[]
     while i<len(text):
         length=0
         position=0
-        for x in range(window):
+        start=max(0,i-search_window)
+        for x in range(start,i):
             last=0
-            while((i+last<len(text)-1)and(text[i+last]==text[x+last])):
+            while((last<lookahead-1)and(i+last<len(text))and(text[i+last]==text[x+last])):
                 last+=1
             if((last>0)and(last>=length)):
                 length=last
-                position=window-x
-        next_sombol=text[i+length]
+                position=i-x
+        if i+length<len(text):
+            next_sombol=text[i+length]
+        else:
+            next_sombol=""
         tags.append((position,length,next_sombol))
-        window+=length+1
+
         i+=length+1
     return tags
+
 
                 
 def read_tags(data):
      tags = []
      for item in data.split(","):
         position, length, next_sombol = item.split()
+        if next_sombol == "NULL":
+            next_sombol = ""
         tags.append((int(position), int(length), next_sombol))
      return tags
 
 def lz77_to_text(tags):
-    return ", ".join(f"{p} {l} {s}" for p, l, s in tags)
+        return ", ".join(f"{p} {l} {s if s != '' else 'NULL'}" for p, l, s in tags)
 
 
 def decompress_lz77(tags):

@@ -64,7 +64,9 @@ def compression_menu():
 
     if choice == "1":
         file_or_text = getInput_compresion()
-        tags=compress_lz77(file_or_text)
+        s = int(input("Search buffer size: "))                  
+        l = int(input("Look-ahead buffer size: "))               
+        tags=compress_lz77(file_or_text,s,l)
         print("Tags: ",tags)
         compression_ratio_lz77(file_or_text,tags)
         compressed_data = lz77_to_text(tags)
