@@ -113,6 +113,7 @@ def decompression_menu():
             if choice == "1":
                 tags = read_tags(data)
                 decompressed_data = decompress_lz77(tags)
+                print("Text:", decompressed_data)
 
             elif choice == "2":
                 decompressed_data = decompress_lz78(data)
@@ -121,7 +122,6 @@ def decompression_menu():
                 data = lzw_clean_fuc(data)
                 decompressed_data = lzw_decompress_fuc(data)
 
-            print("Text:", decompressed_data)
             break
 
         except Exception:
