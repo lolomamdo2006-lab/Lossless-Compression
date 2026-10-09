@@ -1,6 +1,6 @@
 import math
 
-def compress_lz77(text,search_window,lookahead):
+def compress_lz77(text,search_window=12,lookahead=11):
     i=0
     tags=[]
     while i<len(text):
