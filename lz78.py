@@ -24,9 +24,15 @@ def parse_string(tags):
 
     return tags_as_string
 #==============================
-def compression_ratio(data,tags,max_index):
+def compression_ratio(data,tags):
+    max_index=0
+    for tag in tags:
+      index,symbol=tag
+      ind=int(index)
+      if ind>max_index:
+         max_index=ind
     print(f"Original Size: {len(data)*8} bits, {len(data)} bytes")
-    inbits=tags*(8+ max_index.bit_length())
+    inbits=len(tags)*(8+ max_index.bit_length())
     print(f"Compressed Size: {inbits} bits, {inbits/8} bytes")
 #==========================================================
 def decompress_lz78(str_tags):
@@ -82,7 +88,7 @@ def compress_to_lz78(data):
     print("\nDictionary: ")
     for symbol,index in dictionary.items():
         print(index,":",symbol)
-    compression_ratio(data,len(tags),max_index)
+    compression_ratio(data,tags)
     print(tags_as_string)
     return tags
 

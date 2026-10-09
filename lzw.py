@@ -6,30 +6,23 @@ def lzw_to_text(tag):
         tag_as_string+=" "
     return tag_as_string
 def lzw_compress_fuc(text):
-   
     dictionary = {}
-     
     mylist = []
-  
     current = ""
     code = 65
     for char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
-         dictionary[char] = code
-         code += 1
+        dictionary[char] = code
+        code += 1
     code =128
-    
     for x in text:
-         new = current + x
-         if new in dictionary:
-               current = new
-         else:
-              
-              mylist.append(dictionary[current])
-              dictionary[new] = code
-              code += 1
-              current = x
-
-    
+        new = current + x
+        if new in dictionary:
+            current = new
+        else:
+            mylist.append(dictionary[current])
+            dictionary[new] = code
+            code += 1
+            current = x
     mylist.append(dictionary[current])
     print("Compressed List:", mylist)
     return mylist #Alaa

@@ -18,12 +18,15 @@ def run_compression():
     global data
     global result
     global stat
+    size=0
     stat=0
     selected = options.get()
     if selected=="Lz78":
         result = compress_to_lz78(data)
+        compression_ratio(data,result)
     elif selected=="Lz77":
         result = compress_lz77(data)
+        compression_ratio_lz77(data, result)
     elif selected=="Lzw":
         result=lzw_compress_fuc(data)
     label.configure(text=result)
@@ -65,7 +68,6 @@ def save_file_txt():
         elif selected=="Lz77":
             content=lz77_to_text(result)
         elif selected== "Lzw":
-            print("alaa")
             content=lzw_to_text(result)
     file_path = filedialog.asksaveasfilename(title="Save File", defaultextension=".txt",filetypes=[
     ("Text Files", "*.txt"),
@@ -76,14 +78,14 @@ def save_file_txt():
             with open(file_path, "w") as file:
                 file.write(content)
 def save_file_bin():
-    pass
+    file_path = filedialog.asksaveasfilename(title="Save File", defaultextension=".bin")
+    global result
+    global stat
+    selected=options.get()
+    if (not stat):
+        from_tag__to_Binary(result,selected,file_path)
 #=================== GUI
-
-
-import customtkinter as ctk
-
 app.columnconfigure((0, 1), weight=1)
-
 options = ctk.CTkComboBox(
     app,
     values=["Lz77", "Lz78", "Lzw"],
