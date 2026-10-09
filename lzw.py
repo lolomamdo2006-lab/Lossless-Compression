@@ -25,7 +25,6 @@ def lzw_compress_fuc(text):
             current = x
     mylist.append(dictionary[current])
     print("Compressed List:", mylist)
-    return mylist #Alaa
 
     def lzw_compression_ratio(text):
      original_size = len(text) * 8
