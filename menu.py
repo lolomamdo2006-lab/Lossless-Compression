@@ -2,6 +2,8 @@ from handling_files import *
 from lz78 import *
 from lz77 import *
 from lzw import *
+
+
 def getInput_compresion():
     while True:
         print("\n===== File or Text =====")
@@ -21,6 +23,8 @@ def getInput_compresion():
 
         else:
             print("Invalid choice! Please choose 1 or 2.")
+
+
 def getInput_decompresion(choice):
     while True:
         print("\n===== Decompression Input =====")
@@ -45,6 +49,8 @@ def getInput_decompresion(choice):
 
         else:
             print("Invalid choice! Please choose 1 or 2.")
+
+
 def compression_menu():
     print("\n===== Compression =====")
     print("1. LZ77")
@@ -82,6 +88,8 @@ def compression_menu():
         file_save(compressed_data) 
     if save_choice.lower() == "n":
         print("Data not saved.")
+
+
 def decompression_menu():
     print("\n===== Decompression =====")
     print("1. LZ77")
@@ -90,32 +98,38 @@ def decompression_menu():
     print("4. Back")
 
     choice = input("Choose an algorithm: ")
-    decompressed_data = ""
 
-    if choice == "1":
-        file_or_text = getInput_decompresion(choice)
-        tags = read_tags(file_or_text)
-        decompressed_data = decompress_lz77(tags)
-        print("Text:", decompressed_data)
-
-    elif choice == "2":
-        
-        file_or_text = getInput_decompresion(choice)
-        decompressed_data = decompress_lz78(file_or_text)
-        
-
-    elif choice == "3":
-        file_or_text = getInput_decompresion(choice)
-        clean_data = lzw_clean_fuc(file_or_text)
-        decompressed_data = lzw_decompress_fuc(clean_data)
-
-    elif choice == "4":
+    if choice == "4":
         return
 
-    else:
+    if choice not in ("1", "2", "3"):
         print("Invalid choice!")
-    save_choice = input("Do you want to save the decompressed data? (y/n): ")
+        return
+
+    while True:
+        try:
+            data = getInput_decompresion(choice)
+
+            if choice == "1":
+                tags = read_tags(data)
+                decompressed_data = decompress_lz77(tags)
+
+            elif choice == "2":
+                decompressed_data = decompress_lz78(data)
+
+            else:
+                data = lzw_clean_fuc(data)
+                decompressed_data = lzw_decompress_fuc(data)
+
+            print("Text:", decompressed_data)
+            break
+
+        except Exception:
+            print("Invalid input! Please try again.")
+
+    save_choice = input("Save the decompressed data? (y/n): ")
+
     if save_choice.lower() == "y":
         file_save(decompressed_data)
-    elif save_choice.lower() == "n":
+    else:
         print("Data not saved.")
